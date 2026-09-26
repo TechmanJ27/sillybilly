@@ -1,6 +1,10 @@
 import { Events, MessageFlags, Collection, type ChatInputCommandInteraction } from "discord.js";
 import path from "node:path";
 import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 declare module "discord.js" {
     export interface Client {
