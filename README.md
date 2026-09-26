@@ -20,6 +20,6 @@ The full source code can be found in this repository.
 | Paw          | Paw at someone like a cat                |
 | Pie          | Pie someone in the face                  |
 | Sacrifice    | Get some use out of the sacrifical altar |
-\
+
 Developed solely by TechmanJ27.\
 All rights reserved.*
