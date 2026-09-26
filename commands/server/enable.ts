@@ -23,17 +23,17 @@ export default {
         await interaction.deferReply({})
         const disabledPath = path.join(__dirname, '..', '..', 'data', 'disabled.json');
         const disabled = JSON.parse(fs.readFileSync(disabledPath, 'utf8'));
-        const server = interaction.guild;
+        const server = interaction.guildId;
 
         const command = interaction.options.getString('command');
 
         if (!command) return await interaction.editReply('Command not found');
         if (!server) return await interaction.editReply('Guild not found');
 
-        if (!disabled[server.id]) disabled[server.id] = [];
+        if (!disabled[server]) disabled[server] = [];
 
-        if (disabled[server.id].includes(command)) {
-            disabled[server.id] = disabled[server.id].filter((cmd: string) => cmd !== command);
+        if (disabled[server].includes(command)) {
+            disabled[server] = disabled[server].filter((cmd: string) => cmd !== command);
 
             const updatedJson = JSON.stringify(disabled, null, 2);
             fs.writeFileSync(disabledPath, updatedJson);
