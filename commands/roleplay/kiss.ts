@@ -47,8 +47,8 @@ export default {
         if (bot.id === target.id) {
             return await interaction.editReply(`You're giving me a kiss?! YAY`);
         }
-        if (blown) return await interaction.reply(`${user} blows a kiss at ${target} ♡`);
-        if (cheek) return await interaction.reply(`${user} gives ${target} a peck on the cheek`);
+        if (blown) return await interaction.editReply(`${user} blows a kiss at ${target} ♡`);
+        if (cheek) return await interaction.editReply(`${user} gives ${target} a peck on the cheek`);
         const reply = kiss[getRandomInt(0, kiss.length - 1)]!;
         return interaction.editReply(reply);
     }

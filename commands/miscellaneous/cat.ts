@@ -1,9 +1,10 @@
-import {type ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
+import {type ChatInputCommandInteraction, InteractionContextType, SlashCommandBuilder} from "discord.js";
 
 export default {
     data: new SlashCommandBuilder()
         .setName("cat")
-        .setDescription('Send a cat'),
+        .setDescription('Send a cat')
+        .setContexts(InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel),
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.reply('_  _╱|、\n' +
             '(˚ˎ 。7  \n' +
