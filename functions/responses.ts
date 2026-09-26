@@ -115,13 +115,13 @@ export const responses: ResponseMap = {
         options: [],
     },
     dance: {
-        self: ``,
+        self: `{user} shows off their moves`,
         bot: ``,
         options: [
         ],
     },
     gun: {
-        self: ``,
+        self: `{user} is secretly a gun. Don't tell anyone!`,
         bot: ``,
         options: [
         ],
