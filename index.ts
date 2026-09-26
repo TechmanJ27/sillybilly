@@ -13,8 +13,6 @@ const __dirname = path.dirname(__filename);
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
-const disabled = JSON.parse('/data/disabled.json');
-
 for (const folder of commandFolders) {
 	if (folder === '.DS_Store') continue;
 	const commandsPath = path.join(foldersPath, folder);
@@ -27,7 +25,6 @@ for (const folder of commandFolders) {
 			command = command.default;
 		}
 		if ('data' in command && 'execute' in command) {
-			if (disabled.command.data.name) {}
 			client.commands.set(command.data.name, command);
 		} else {
 			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);

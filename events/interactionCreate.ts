@@ -1,4 +1,6 @@
 import { Events, MessageFlags, Collection, type ChatInputCommandInteraction } from "discord.js";
+import path from "node:path";
+import fs from "node:fs";
 
 declare module "discord.js" {
     export interface Client {
@@ -21,6 +23,12 @@ export default {
                 `No command matching ${interaction.commandName} was found.`,
             );
             return;
+        }
+
+        const disabledPath = path.join(__dirname, 'data', 'disabled.json');
+        const disabled = JSON.parse(fs.readFileSync(disabledPath, 'utf8'));
+        if (interaction.guild != null) {
+            if ((disabled[interaction.guild.id] ?? []).includes(command.data.name)) return await interaction.reply({content: 'This command has been disabled in this guild', flags: MessageFlags.Ephemeral});
         }
 
         const { cooldowns } = interaction.client;

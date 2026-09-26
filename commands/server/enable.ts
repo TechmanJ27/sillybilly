@@ -4,12 +4,12 @@ import fs from "node:fs";
 
 export default {
     data: new SlashCommandBuilder()
-        .setName('disable')
-        .setDescription('Disable a command in this server')
+        .setName('enable')
+        .setDescription('Enable a command in this server')
         .addStringOption(option =>
             option
                 .setName('command')
-                .setDescription('The command to disable')
+                .setDescription('The command to enable')
                 .setRequired(true)
         )
         .setContexts(InteractionContextType.Guild)
@@ -22,20 +22,22 @@ export default {
         const server = interaction.guild;
 
         const command = interaction.options.getString('command');
-        if (command === 'disable' || command === 'enable') return await interaction.editReply('You cannot disable this command.');
 
         if (!command) return await interaction.editReply('Command not found');
         if (!server) return await interaction.editReply('Guild not found');
 
         if (!disabled[server.id]) disabled[server.id] = [];
 
-        if (disabled[server.id].includes(command)) return await interaction.editReply('Command already disabled.');
-        disabled[server.id].push(command);
+        if (disabled[server.id].includes(command)) {
+            disabled[server.id] = disabled[server.id].filter((cmd: string) => cmd !== command);
 
-        const updatedJson = JSON.stringify(disabled, null, 2);
-        fs.writeFileSync(disabledPath, updatedJson);
+            const updatedJson = JSON.stringify(disabled, null, 2);
+            fs.writeFileSync(disabledPath, updatedJson);
 
-        return await interaction.editReply(`Successfully disabled ${command}`);
+            return await interaction.editReply(`Successfully enabled ${command}`);
+        } else {
+            return interaction.editReply('Command is not disabled.');
+        }
 
     }
 }
