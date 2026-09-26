@@ -22,4 +22,4 @@ The full source code can be found in this repository.
 | Sacrifice    | Get some use out of the sacrifical altar |
 
 Developed solely by TechmanJ27.\
-All rights reserved.*
+All rights reserved.
