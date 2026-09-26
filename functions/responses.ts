@@ -52,7 +52,7 @@ export const responses: ResponseMap = {
     },
     howl: {
         self: `{user}’s howling really loudly at the sky... they must really miss their pack mates`,
-        bot: `AAAWOOOOOO!!!!`,
+        bot: `AWOOOOOO!!!!`,
         options: [
             `☆{user} just went up to {target} and howled :3`,
             `{user} is howling at {target}... must be a full moon`,
@@ -112,18 +112,36 @@ export const responses: ResponseMap = {
     nuzzle: {
         self: ``,
         bot: ``,
-        options: [],
+        options: [
+            `{user} nuzzles {target}`
+        ],
     },
     dance: {
         self: `{user} shows off their moves`,
         bot: ``,
         options: [
+            `{user} dances with {target}`,
         ],
     },
     gun: {
         self: `{user} is secretly a gun. Don't tell anyone!`,
         bot: ``,
         options: [
+            `{user} is exercising their second amendment right and turning {target} into a rifle`
+        ],
+    },
+    scream: {
+        self: `{user} screams into a pillow`,
+        bot: `Oh, ok, I'll go hide in my corner again`,
+        options: [
+
+        ],
+    },
+    explode: {
+        self: `{user} explodes!`,
+        bot: `Self-destruct sequence activated. Haha, just kidding!`,
+        options: [
+            `{target} opens their mailbox to find...\nA pipe bomb from {user} 💥`
         ],
     }
 };
