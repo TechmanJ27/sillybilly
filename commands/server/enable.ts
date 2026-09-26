@@ -21,7 +21,7 @@ export default {
 
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply({})
-        const disabledPath = path.join(__dirname, 'data', 'disabled.json');
+        const disabledPath = path.join(__dirname, '..', '..', 'data', 'disabled.json');
         const disabled = JSON.parse(fs.readFileSync(disabledPath, 'utf8'));
         const server = interaction.guild;
 
