@@ -43,7 +43,7 @@ export const responses: ResponseMap = {
     },
     arson: {
         self: `{user} plays with fire`,
-        bot: ``,
+        bot: `Activating anti-burn protocol`,
         options: [
             `{user} burns down {target}'s home`,
             `{user} sets {target} ablaze`,
@@ -52,7 +52,7 @@ export const responses: ResponseMap = {
     },
     howl: {
         self: `{user}’s howling really loudly at the sky... they must really miss their pack mates`,
-        bot: ``,
+        bot: `AAAWOOOOOO!!!!`,
         options: [
             `☆{user} just went up to {target} and howled :3`,
             `{user} is howling at {target}... must be a full moon`,
@@ -61,7 +61,7 @@ export const responses: ResponseMap = {
     },
     sacrifice: {
         self: `{user} sacrifices themselves... What a hero 🫡`,
-        bot: ``,
+        bot: `What did I ever do to you?`,
         options: [
             `{user} sacrifices one of {target}'s lambs`,
             `{user} sacrifices two of {target}'s lambs`,
@@ -73,12 +73,12 @@ export const responses: ResponseMap = {
     },
     paw: {
         self: `{user} paws at their reflection 🐾`,
-        bot: ``,
+        bot: `Woah there, don't be getting to excited`,
         options: [`{user} paws at {target} 🐾. They must be hungry`],
     },
     banish: {
         self: `OH GOD {user} IS BANISHING THEMSELVES TO THE SHADOW REALM??? NOOOOOOOO`,
-        bot: ``,
+        bot: `Nice try. I dodge`,
         options: [
             `OH GOD {user} IS BANISHING {target} TO THE SHADOW REALM?? SOMEONE STOP THEM!!!`,
             `{user} is now banishing {target} to the shadow realm, say goodbye!`,
@@ -94,4 +94,45 @@ export const responses: ResponseMap = {
             `{user} is crying, and they aren't happy tears`,
         ],
     },
+    cake: {
+        self: `{user} bakes a tasty cake for themself`,
+        bot: `You baked a cake for me!`,
+        options: [
+            `{user} bakes a cake for {target}! What's the occasion?`,
+        ],
+    },
+    pie: {
+        self: `{user} makes themself a delicious pie`,
+        bot: `A pie? For me! YIPPEE`,
+        options: [
+            `{user} pies {target}. Apple, tasty`,
+            `{target} SURPRISE PIE!! Don't look at me, {user} told me to do it`,
+        ],
+    },
+    nuzzle: {
+        self: ``,
+        bot: ``,
+        options: [],
+    },
+    dance: {
+        self: ``,
+        bot: ``,
+        options: [
+        ],
+    },
+    gun: {
+        self: ``,
+        bot: ``,
+        options: [
+        ],
+    }
 };
+
+/*
+name: {
+    self: ``,
+    bot: ``,
+    options: [
+    ],
+}
+*/
