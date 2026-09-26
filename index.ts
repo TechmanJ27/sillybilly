@@ -24,8 +24,8 @@ for (const folder of commandFolders) {
 		if (command.default) {
 			command = command.default;
 		}
-
 		if ('data' in command && 'execute' in command) {
+			if (command.data.name) {}
 			client.commands.set(command.data.name, command);
 		} else {
 			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
