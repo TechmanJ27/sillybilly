@@ -14,6 +14,7 @@ function format(str: string, user: User, target: User) {
 }
 
 export async function messages(command: string, interaction: ChatInputCommandInteraction, target: User, user: User) {
+
     const entry = responses[command];
     if (!entry) {
         return await interaction.reply(`Unknown command: ${command}`);
@@ -23,7 +24,7 @@ export async function messages(command: string, interaction: ChatInputCommandInt
 
     let raw;
     if (user === target) {
-        raw = entry.self;
+        raw = entry.self  || pickRandom(entry.options);
     } else if (bot.id === target.id) {
         raw = entry.bot || pickRandom(entry.options);
     } else {
