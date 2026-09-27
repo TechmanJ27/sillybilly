@@ -53,7 +53,7 @@ export default {
 
             if (now < expirationTime) {
                 const expiredTimestamp = Math.round(expirationTime / 1_000);
-                return interaction.followUp({
+                return interaction.reply({
                     content: `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
                     flags: MessageFlags.Ephemeral,
                 });
@@ -77,7 +77,7 @@ export default {
                         flags: MessageFlags.Ephemeral,
                     });
                 } else {
-                    await interaction.followUp({
+                    await interaction.reply({
                         content: "There was an error while executing this command!",
                         flags: MessageFlags.Ephemeral,
                     });
