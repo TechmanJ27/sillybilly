@@ -3,19 +3,19 @@ import {messages} from "../../functions/messages.js";
 
 export default {
     data: new SlashCommandBuilder()
-        .setName("gun")
-        .setDescription("Execute your second amendment right")
+        .setName("murder")
+        .setDescription("Obliterate your enemies")
         .setContexts(InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel)
         .addUserOption(option =>
             option
                 .setName("user")
-                .setDescription("/̵͇̿/̿̿̿̿ ̿̿")
+                .setDescription("The opps")
                 .setRequired(true)
         ),
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply();
         const target = interaction.options.getUser("user");
         if (target === null) return;
-        await messages('gun', interaction, target, interaction.user);
+        await messages('murder', interaction, target, interaction.user);
     }
 }

@@ -143,6 +143,14 @@ export const responses: ResponseMap = {
         options: [
             `{target} opens their mailbox to find...\nA pipe bomb from {user} 💥`
         ],
+    },
+    murder: {
+        self: `{user} dies!`,
+        bot: `I dodge`,
+        options: [
+            `{user} pulls a knife on {target}`,
+            `{user} snipes {target}. Nice shot!`,
+        ],
     }
 };
 

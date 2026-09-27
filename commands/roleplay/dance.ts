@@ -4,8 +4,8 @@ import {messages} from "../../functions/messages.js";
 export default {
     data: new SlashCommandBuilder()
         .setName("dance")
-        .setContexts(InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel)
         .setDescription("Cha-cha slide")
+        .setContexts(InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel)
         .addUserOption(option =>
             option
                 .setName("user")
