@@ -24,7 +24,6 @@ The full source code can be found in this repository.
 | Pie          | Pie someone in the face                   |
 | Sacrifice    | Get some use out of the sacrificial altar |
 | Scream       | I have no mouth and I must scream         |
-| Command Name | Description                               |
 ### Server
 | Disable      | Disable a command in your server          |
 | Enable       | Enable a disabled command in your server  |
