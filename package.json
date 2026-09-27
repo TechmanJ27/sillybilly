@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "name": "avalonbot",
   "version": "1.0.0",
   "description": "",
@@ -11,14 +10,11 @@
     "deploy-commands": "node deploy-commands.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "bin": {
-    "mytool": "/console-commands/commands.js"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
-    "commander": "^15.0.0",
     "discord.js": "^14.27.0",
     "dotenv": "^17.4.2",
     "messages": "^0.1.0",
