@@ -1,7 +1,7 @@
 # Sillybilly
-The SillyBilly Discord bot, originally developed with the UES Discord Server in mind and primarily as an expansion for Goober Bot,  is an action bot with many interesting and unique commands, many of them suggested by the users themselves. 
+The SillyBilly Discord bot, originally developed for the UES Discord Server and primarily as an expansion of Goober Bot, is an action bot with many interesting, unique commands, many of them suggested by users. 
 
-The full source code can be found in this repository.
+The full source code is available in this repository.
 ## Command List
 ### Roleplay
 | Command Name | Description                               |
@@ -33,5 +33,6 @@ The full source code can be found in this repository.
 | Command Name | Description                               |
 |--------------|-------------------------------------------|
 | Cat          | Send a cute cat :3                        |
+
 Developed solely by TechmanJ27.\
 All rights reserved.
