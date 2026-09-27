@@ -5,6 +5,8 @@ The full source code can be found in this repository.
 ## Command List
 | Command Name | Description                               |
 |--------------|-------------------------------------------|
+| Roleplay     |
+|--------------|
 | Arson        | Burn it all down                          |
 | Banish       | Banish someone to the shadow realm!       |
 | Bark         | Bark at someone                           |
