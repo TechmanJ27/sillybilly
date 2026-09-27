@@ -25,9 +25,13 @@ The full source code can be found in this repository.
 | Sacrifice    | Get some use out of the sacrificial altar |
 | Scream       | I have no mouth and I must scream         |
 ### Server
+| Command Name | Description                               |
+|--------------|-------------------------------------------|
 | Disable      | Disable a command in your server          |
 | Enable       | Enable a disabled command in your server  |
 ### Miscellaneous
+| Command Name | Description                               |
+|--------------|-------------------------------------------|
 | Cat          | Send a cute cat :3                        |
 Developed solely by TechmanJ27.\
 All rights reserved.
