@@ -8,6 +8,7 @@ The full source code can be found in this repository.
 | Arson        | Burn it all down                          |
 | Banish       | Banish someone to the shadow realm!       |
 | Bark         | Bark at someone                           |
+| Basement     | Trap someone in your basement             |
 | Cake         | Bake a cake!                              |
 | Cry          | Let the tears run down your face          |
 | Cuddle       | Give someone cuddles :3                   |
