@@ -19,6 +19,7 @@ The full source code is available in this repository.
 | Gun          | Honestly, I don't even know               |
 | Howl         | AWOOOOO                                   |
 | Kiss         | Give someone a sweet kiss                 |
+| Murder       | Get rid of your opps                      |
 | Nuzzle       | Nuzzle somebody :3                        |
 | Paw          | Paw at someone like a cat                 |
 | Pie          | Pie someone in the face                   |
