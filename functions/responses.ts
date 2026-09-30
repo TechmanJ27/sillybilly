@@ -151,7 +151,14 @@ export const responses: ResponseMap = {
             `{user} pulls a knife on {target}`,
             `{user} snipes {target}. Nice shot!`,
         ],
-    }
+    },
+    ascend: {
+        self: ``,
+        bot: ``,
+        options: [
+            `{user} ascended to the heavens beyond, never to return`,
+        ],
+    },
 };
 
 /*
