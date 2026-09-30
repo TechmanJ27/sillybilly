@@ -88,7 +88,7 @@ export default {
             const userId = buttonArray[0];
             if (!userId) return;
             const user = await interaction.client.users.fetch(userId);
-            if (interaction.user === user) return await interaction.followUp({content: `You cannot collect your own drop`, flags: MessageFlags.Ephemeral});
+            if (interaction.user === user) return await interaction.reply({content: `You cannot collect your own drop`, flags: MessageFlags.Ephemeral});
             await interaction.followUp({content: `Drop collected`, flags: MessageFlags.Ephemeral});
             await interaction.editReply({components: []})
         }
