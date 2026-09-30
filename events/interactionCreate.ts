@@ -1,4 +1,4 @@
-import { Events, MessageFlags, Collection, type ChatInputCommandInteraction } from "discord.js";
+import { Events, MessageFlags, Collection, type Interaction } from "discord.js";
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -15,72 +15,82 @@ declare module "discord.js" {
 
 export default {
     name: Events.InteractionCreate,
-    async execute(interaction: ChatInputCommandInteraction) {
-        if (!interaction.isChatInputCommand()) return;
-
-        const command = interaction.client.commands.get(
-            interaction.commandName,
-        );
-
-        if (!command) {
-            console.error(
-                `No command matching ${interaction.commandName} was found.`,
+    async execute(interaction: Interaction) {
+        if (!interaction.isChatInputCommand() && !interaction.isButton()) return;
+        if (interaction.isChatInputCommand()) {
+            const command = interaction.client.commands.get(
+                interaction.commandName,
             );
-            return;
-        }
 
-        const disabledPath = path.join(__dirname, '..', 'data', 'disabled.json');
-        const disabled = JSON.parse(fs.readFileSync(disabledPath, 'utf8'));
-        if (interaction.guildId != null) {
-            if ((disabled[interaction.guildId] ?? []).includes(command.data.name)) return await interaction.reply({content: 'This command has been disabled in this guild'});
-        }
-
-        const { cooldowns } = interaction.client;
-
-        if (!cooldowns.has(command.data.name)) {
-            cooldowns.set(command.data.name, new Collection());
-        }
-
-        const now = Date.now();
-        const timestamps = cooldowns.get(command.data.name);
-        const defaultCooldownDuration = 0;
-        const cooldownAmount =
-            (command.cooldown ?? defaultCooldownDuration) * 1_000;
-
-        if (timestamps!.has(interaction.user.id)) {
-            const expirationTime =
-                timestamps!.get(interaction.user.id)! + cooldownAmount;
-
-            if (now < expirationTime) {
-                const expiredTimestamp = Math.round(expirationTime / 1_000);
-                return interaction.reply({
-                    content: `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
-                    flags: MessageFlags.Ephemeral,
-                });
+            if (!command) {
+                console.error(
+                    `No command matching ${interaction.commandName} was found.`,
+                );
+                return;
             }
-        }
 
-        timestamps!.set(interaction.user.id, now);
-        setTimeout(
-            () => timestamps!.delete(interaction.user.id),
-            cooldownAmount,
-        );
-
-        try {
-            await command.execute(interaction);
-        } catch (error) {
-            console.error(error);
-            if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({
-                    content: "There was an error while executing this command!",
-                    flags: MessageFlags.Ephemeral,
-                });
-            } else {
-                await interaction.reply({
-                    content: "There was an error while executing this command!",
-                    flags: MessageFlags.Ephemeral,
-                });
+            const disabledPath = path.join(__dirname, '..', 'data', 'disabled.json');
+            const disabled = JSON.parse(fs.readFileSync(disabledPath, 'utf8'));
+            if (interaction.guildId != null) {
+                if ((disabled[interaction.guildId] ?? []).includes(command.data.name)) return await interaction.reply({content: 'This command has been disabled in this guild'});
             }
+
+            const { cooldowns } = interaction.client;
+
+            if (!cooldowns.has(command.data.name)) {
+                cooldowns.set(command.data.name, new Collection());
+            }
+
+            const now = Date.now();
+            const timestamps = cooldowns.get(command.data.name);
+            const defaultCooldownDuration = 0;
+            const cooldownAmount =
+                (command.cooldown ?? defaultCooldownDuration) * 1_000;
+
+            if (timestamps!.has(interaction.user.id)) {
+                const expirationTime =
+                    timestamps!.get(interaction.user.id)! + cooldownAmount;
+
+                if (now < expirationTime) {
+                    const expiredTimestamp = Math.round(expirationTime / 1_000);
+                    return interaction.reply({
+                        content: `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
+                        flags: MessageFlags.Ephemeral,
+                    });
+                }
+            }
+
+            timestamps!.set(interaction.user.id, now);
+            setTimeout(
+                () => timestamps!.delete(interaction.user.id),
+                cooldownAmount,
+            );
+
+            try {
+                await command.execute(interaction);
+            } catch (error) {
+                console.error(error);
+                if (interaction.replied || interaction.deferred) {
+                    await interaction.followUp({
+                        content: "There was an error while executing this command!",
+                        flags: MessageFlags.Ephemeral,
+                    });
+                } else {
+                    await interaction.reply({
+                        content: "There was an error while executing this command!",
+                        flags: MessageFlags.Ephemeral,
+                    });
+                }
+            }
+        } else if (interaction.isButton()) {
+            const button = interaction.customId;
+            const buttonArray = button.split('-');
+            const userId = buttonArray[0];
+            if (!userId) return;
+            const user = await interaction.client.users.fetch(userId);
+            if (interaction.user === user) return await interaction.followUp({content: `You cannot collect your own drop`, flags: MessageFlags.Ephemeral});
+            await interaction.followUp({content: `Drop collected`, flags: MessageFlags.Ephemeral});
+            await interaction.editReply({components: []})
         }
     },
 };
