@@ -17,7 +17,7 @@ declare module "discord.js" {
 export default {
     name: Events.InteractionCreate,
     async execute(interaction: Interaction) {
-        if (!interaction.isChatInputCommand() && !interaction.isButton()) return;
+        if (!interaction.isChatInputCommand()) return;
         if (interaction.isChatInputCommand()) {
             const command = interaction.client.commands.get(
                 interaction.commandName,
@@ -83,16 +83,6 @@ export default {
                     });
                 }
             }
-        } else if (interaction.isButton()) {
-            const button = interaction.customId;
-            const buttonArray = button.split('-');
-            const userId = buttonArray[0];
-            const messageId = buttonArray[1];
-            if (!interaction.channel || !userId || !messageId) return;
-            const message = await interaction.channel.messages.fetch(messageId);
-            if (interaction.user.id === userId) return await interaction.reply({content: `You cannot collect your own drop`, flags: MessageFlags.Ephemeral});
-            await interaction.reply({content: `Drop collected`, flags: MessageFlags.Ephemeral});
-            await message.edit({components: []})
         }
     },
 };
