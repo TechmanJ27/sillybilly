@@ -2,6 +2,7 @@ import { Events, MessageFlags, Collection, type Interaction } from "discord.js";
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
+import {messages} from "../functions/messages.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -86,11 +87,12 @@ export default {
             const button = interaction.customId;
             const buttonArray = button.split('-');
             const userId = buttonArray[0];
-            if (!userId) return;
-            const user = await interaction.client.users.fetch(userId);
-            if (interaction.user === user) return await interaction.reply({content: `You cannot collect your own drop`, flags: MessageFlags.Ephemeral});
-            await interaction.followUp({content: `Drop collected`, flags: MessageFlags.Ephemeral});
-            await interaction.editReply({components: []})
+            const messageId = buttonArray[1];
+            if (!interaction.channel || !userId || !messageId) return;
+            const message = await interaction.channel.messages.fetch(messageId);
+            if (interaction.user.id === userId) return await interaction.reply({content: `You cannot collect your own drop`, flags: MessageFlags.Ephemeral});
+            await interaction.reply({content: `Drop collected`, flags: MessageFlags.Ephemeral});
+            await message.edit({components: []})
         }
     },
 };
