@@ -1,1 +1,1 @@
-declare module 'J27-lib';
+declare module 'j27-lib';
