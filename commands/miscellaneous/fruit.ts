@@ -18,7 +18,8 @@ export default {
         const fruits = ['avocado', 'lemon', 'tomato'];
         const fruitEmojis = ['🥑', '🍋', '🍅'];
         if (!fruits.includes(fruit)) return interaction.reply({content: `${fruit} is not a valid fruit`, flags: MessageFlags.Ephemeral});
-        const answers = [`${interaction.user} casts ${fruit}!\n${fruitEmojis[fruits.indexOf(fruit)]}`];
+        const answers = [`${interaction.user} casts ${fruit}!`];
         await interaction.reply(pickRandom(answers));
+        await interaction.followUp(fruitEmojis[fruits.indexOf(fruit)]!);
     }
 }
