@@ -1,5 +1,4 @@
 import {SlashCommandBuilder, InteractionContextType, type ChatInputCommandInteraction, EmbedBuilder} from "discord.js";
-import color from "../../functions/colors.js";
 
 export default {
     data: new SlashCommandBuilder()
@@ -27,7 +26,7 @@ export default {
         const giveEmbed = new EmbedBuilder()
             .setTitle(`${interaction.user.displayName}'s gift!`)
             .setDescription(`${interaction.user} gives ${target} ${item}`)
-            .setColor(color())
+            .setColor('#4EBDED')
         await interaction.editReply({embeds: [giveEmbed]});
     }
 }

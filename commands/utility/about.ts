@@ -1,6 +1,4 @@
 import {type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder} from "discord.js";
-import color from "../../functions/colors.js";
-
 
 export default {
     data: new SlashCommandBuilder()
@@ -17,7 +15,7 @@ export default {
                 '  - Use `{user}` for the user who ran the command\n' +
                 '  - Use `{target}` for the target of the command\n' +
                 '  - You **can** use emoticons/emojis')
-            .setColor(color());
+            .setColor('#4EBDED');
 
         await interaction.reply({embeds: [guide]});
     }
