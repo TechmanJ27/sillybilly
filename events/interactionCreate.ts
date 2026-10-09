@@ -2,7 +2,6 @@ import { Events, MessageFlags, Collection, type Interaction } from "discord.js";
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
-import {messages} from "../functions/messages.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
