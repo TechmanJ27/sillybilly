@@ -4,7 +4,7 @@ import {messages} from "../../functions/messages.js";
 export default {
     data: new SlashCommandBuilder()
         .setName("cuddle")
-        .setDescription("Bathe the victim with an overwhelming warmth of love\n")
+        .setDescription("Bathe the victim with an overwhelming warmth of lover")
         .setContexts(InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel)
         .addUserOption(option =>
             option
