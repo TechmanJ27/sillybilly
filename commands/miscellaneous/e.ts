@@ -28,7 +28,7 @@ export default {
 
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply()
-        if (interaction.user.id != '1049795757978435625') return await interaction.editReply('Only the bot creator can use this command!');
+        if (interaction.user.id !== '1049795757978435625') return await interaction.editReply('Only the bot creator can use this command!');
         const t = interaction.options.getString('t');
         const d = interaction.options.getString('d');
         const c = interaction.options.getString('c');

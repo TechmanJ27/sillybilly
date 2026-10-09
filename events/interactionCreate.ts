@@ -31,7 +31,7 @@ export default {
 
             const disabledPath = path.join(__dirname, '..', 'data', 'disabled.json');
             const disabled = JSON.parse(fs.readFileSync(disabledPath, 'utf8'));
-            if (interaction.guildId != null) {
+            if (interaction.guildId !== null) {
                 if ((disabled[interaction.guildId] ?? []).includes(command.data.name)) return await interaction.reply({content: 'This command has been disabled in this guild'});
             }
 
