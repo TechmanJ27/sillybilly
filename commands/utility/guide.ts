@@ -6,6 +6,7 @@ export default {
         .setDescription('Sillybilly response guide'),
 
     async execute(interaction: ChatInputCommandInteraction) {
+        await interaction.deferReply();
         const guide = new EmbedBuilder()
             .setTitle("For every command...")
             .setDescription('- One response is needed for when you target yourself\n' +
@@ -17,6 +18,6 @@ export default {
                 '  - You **can** use emoticons/emojis')
             .setColor('#4EBDED');
 
-        await interaction.reply({embeds: [guide]});
+        await interaction.editReply({embeds: [guide]});
     }
 }

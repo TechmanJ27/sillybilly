@@ -2,21 +2,18 @@ import {type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder} fro
 
 export default {
     data: new SlashCommandBuilder()
-        .setName("guide")
-        .setDescription('Sillybilly response guide'),
+        .setName("about")
+        .setDescription('Who am I?'),
 
     async execute(interaction: ChatInputCommandInteraction) {
-        const guide = new EmbedBuilder()
-            .setTitle("For every command...")
-            .setDescription('- One response is needed for when you target yourself\n' +
-                '- One is needed for when you target the bot\n' +
-                '- The rest are for when you use the command on someone\n' +
-                '- Format as follows:\n' +
-                '  - Use `{user}` for the user who ran the command\n' +
-                '  - Use `{target}` for the target of the command\n' +
-                '  - You **can** use emoticons/emojis')
+        await interaction.deferReply();
+        const about = new EmbedBuilder()
+            .setTitle("About Me")
+            .setDescription('Hey~\nI\'m Sillybilly, a fun roleplay/action bot developed solely by MikuBerry (@techmanj27)\n' +
+                'Originally created for users in the UES server and inspired by Goober Bot, people all across the platform have begun using me!\n' +
+                'In addition to rp commands, I also have some fun and useful features :3')
             .setColor('#4EBDED');
 
-        await interaction.reply({embeds: [guide]});
+        await interaction.editReply({embeds: [about]});
     }
 }
