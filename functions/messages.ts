@@ -35,8 +35,6 @@ export async function messages(command: string, interaction: ChatInputCommandInt
         raw = pickRandom(entry.options);
     }
 
-    const corrupted = [55, 108, 76, 68, 199];
-
     const chars = [nums, upperCase, lowerCase, symbols, nums, symbols];
 
     if (Math.random() === 0.025) {
