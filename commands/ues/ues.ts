@@ -5,6 +5,7 @@ import {
 import characterInfo from "../../functions/character.js";
 import { ues } from "../../functions/wikiHelpers.js";
 import zeeInfo from "../../functions/zee.js";
+import loreInfo from "../../functions/lore.js";
 
 export default {
     data: new SlashCommandBuilder()
@@ -52,19 +53,33 @@ export default {
             subcommand
                 .setName("zee")
                 .setDescription("Zee  info,,, I think")
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('lore')
+                .setDescription("Bonus lore")
+                .addStringOption((option) =>
+                    option
+                        .setName('field')
+                        .setDescription('The field to look up')
+                        .addChoices(
+                            {name: "Eevee", value: "Eevee"},
+                            {name: "Vaporeon", value: "Vaporeon"},
+                            {name: "Jolteon", value: "Jolteon"},
+                            {name: "Flareon", value: "Flareon"},
+                            {name: "Espeon", value: "Espeon"},
+                            {name: "Umbreon", value: "Umbreon"},
+                            {name: "Leafeon", value: "Leafeon"},
+                            {name: "Glaceon", value: "Glaceon"},
+                            {name: "Sylveon", value: "Sylveon"},
+                            {name: "World", value: "World"}
+                        )
+                        .setRequired(true)
+                )
         ),
 
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply()
-
-        console.log({
-            user: interaction.user.tag,
-            context: interaction.context,
-            authorizing: interaction.authorizingIntegrationOwners,
-            guildId: interaction.guildId,
-            channelType: interaction.channel?.type,
-            appPerms: interaction.appPermissions?.toArray(),
-        });
 
         if (interaction.guildId !== ues.guildId) return interaction.editReply('This command can only be run in the UES server.')
 
@@ -74,6 +89,9 @@ export default {
                 break;
             case 'zee':
                 await zeeInfo(interaction);
+                break;
+            case 'lore':
+                await loreInfo(interaction);
                 break;
         }
     }

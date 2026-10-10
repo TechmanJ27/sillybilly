@@ -18,6 +18,7 @@ export default async function zeeInfo(interaction: ChatInputCommandInteraction) 
         .setLabel('Channel')
         .setStyle(ButtonStyle.Link);
     const row= new ActionRowBuilder<ButtonBuilder>().addComponents(youtubeButton);
+
     if (interaction.appPermissions?.has('EmbedLinks')) {
         await interaction.editReply({ embeds: [embed], components: [row] });
     } else {
@@ -28,5 +29,6 @@ export default async function zeeInfo(interaction: ChatInputCommandInteraction) 
             content: `**${embed.data.title ?? ''}**\n${embed.data.description ?? ''}\n${fields}`,
         });
     }
+    
     return;
 }

@@ -32,6 +32,10 @@ export default{
             .setFooter({text: 'Powered by dog.ceo/api'});
         if (breed) embed.setTitle(breed);
 
-        await interaction.editReply({embeds: [embed]});
+        if (interaction.appPermissions?.has('EmbedLinks')) {
+            await interaction.editReply({ embeds: [embed] });
+        } else {
+            await interaction.editReply({ content: data.message });
+        }
     }
 }

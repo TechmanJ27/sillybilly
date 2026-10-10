@@ -6,16 +6,15 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-declare module "discord.js" {
-    export interface Client {
-        commands: Collection<string, any>;
-        cooldowns: Collection<string, Collection<string, number>>;
-    }
-}
-
 export default {
     name: Events.InteractionCreate,
     async execute(interaction: Interaction) {
+        if (interaction.isAutocomplete()) {
+            const command = interaction.client.commands.get(interaction.commandName);
+            await command?.autocomplete?.(interaction);
+            return;
+        }
+
         if (!interaction.isChatInputCommand()) return;
         if (interaction.isChatInputCommand()) {
             const command = interaction.client.commands.get(

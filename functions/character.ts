@@ -97,5 +97,6 @@ export default async function characterInfo(interaction: ChatInputCommandInterac
             content: `**${embed.data.title ?? ''}**\n${embed.data.description ?? ''}\n${fields}`,
         });
     }
+
     return;
 }

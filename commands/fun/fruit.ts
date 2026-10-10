@@ -15,8 +15,18 @@ export default {
     async execute(interaction: ChatInputCommandInteraction) {
         const fruit = interaction.options.getString("fruit")?.toLowerCase();
         if (!fruit) return;
-        const fruits = ['avocado', 'lemon', 'tomato'];
-        const fruitEmojis = ['🥑', '🍋', '🍅'];
+        const fruits = [
+            'avocado', 'lemon', 'tomato',
+            'apple', 'banana', 'orange', 'grape', 'strawberry', 'watermelon',
+            'pineapple', 'cherry', 'peach', 'pear', 'mango', 'kiwi',
+            'blueberry', 'coconut', 'melon', 'green apple', 'olive'
+        ];
+        const fruitEmojis = [
+            '🥑', '🍋', '🍅',
+            '🍎', '🍌', '🍊', '🍇', '🍓', '🍉',
+            '🍍', '🍒', '🍑', '🍐', '🥭', '🥝',
+            '🫐', '🥥', '🍈', '🍏', '🫒'
+        ];
         if (!fruits.includes(fruit)) return interaction.reply({content: `${fruit} is not a valid fruit`, flags: MessageFlags.Ephemeral});
         const answers = [`${interaction.user} casts ${fruit}!`];
         await interaction.reply(pickRandom(answers));

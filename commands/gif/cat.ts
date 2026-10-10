@@ -24,7 +24,8 @@ export default{
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            console.log(new Error(`HTTP error! Status: ${response.status}`));
+            return interaction.editReply('Could not fetch a cat right now.')
         }
 
         const data = (await response.json()) as CatImage[];
@@ -34,7 +35,12 @@ export default{
             .setImage(data[0]!.url)
             .setColor('#4EBDED')
             .setFooter({text: 'Powered by thecatapi.com'});
-        await interaction.editReply({embeds: [embed]});
+
+        if (interaction.appPermissions?.has('EmbedLinks')) {
+            await interaction.editReply({ embeds: [embed] });
+        } else {
+            await interaction.editReply({ content: data[0]!.url });
+        }
     }
 }
 

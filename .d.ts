@@ -1,1 +1,0 @@
-declare module 'j27-lib';
