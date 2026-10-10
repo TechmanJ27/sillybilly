@@ -21,6 +21,7 @@ export class WikiEmbed extends EmbedBuilder {
         super();
         return this.setColor('#4EBDED');
     }
+
     header(page: string, selector: string) {
         return this.setTitle(page + "'s " + selector);
     }
@@ -54,27 +55,51 @@ export function formatList(list: Element, depth = 0): string[] {
     return lines;
 }
 
+const HEADING = /^H[1-6]$/;
+
+function headingOf(el: Element): Element | null {
+    if (HEADING.test(el.tagName)) return el;
+    if (el.classList.contains('mw-heading')) return el.querySelector('h1,h2,h3,h4,h5,h6');
+    return null;
+}
+
+function renderBlock(el: Element): string {
+    switch (el.tagName) {
+        case 'UL':
+        case 'OL':
+            return formatList(el).join('\n');
+        case 'P':
+        case 'DL':
+        case 'BLOCKQUOTE':
+            return el.textContent?.trim() ?? '';
+        case 'DIV':
+            if (el.children.length === 0) return el.textContent?.trim() ?? '';
+            return Array.from(el.children).map(renderBlock).filter(Boolean).join('\n');
+        default:
+            return '';
+    }
+}
+
 export function readSection(heading: Element): string {
-    const level = Number(heading.tagName.slice(1));
+    const startHeading = headingOf(heading) ?? heading;
+    const level = Number(startHeading.tagName.slice(1)) || 6;
+    const anchor = startHeading.parentElement?.classList.contains('mw-heading')
+        ? startHeading.parentElement
+        : startHeading;
+
     const parts: string[] = [];
-    let current = heading.nextElementSibling;
+    let current = anchor.nextElementSibling;
 
     while (current) {
-        const tag = current.tagName;
-
-        if (/^H[1-6]$/.test(tag) && Number(tag.slice(1)) <= level) break;
-        if (tag === 'TABLE') break;
-
-        if (/^H[1-6]$/.test(tag)) {
-            const title = current.querySelector('.mw-headline')?.textContent?.trim();
+        const h = headingOf(current);
+        if (h) {
+            if (Number(h.tagName.slice(1)) <= level) break;
+            const title = (h.querySelector('.mw-headline') ?? h).textContent?.trim();
             if (title) parts.push(`**${title}**`);
-        } else if (tag === 'UL') {
-            parts.push(formatList(current).join('\n'));
-        } else if (tag === 'P') {
-            const text = current.textContent?.trim();
+        } else if (!current.matches('.toc, .navbox, aside, table')) {
+            const text = renderBlock(current);
             if (text) parts.push(text);
         }
-
         current = current.nextElementSibling;
     }
 
