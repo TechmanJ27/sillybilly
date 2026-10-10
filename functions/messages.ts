@@ -1,6 +1,24 @@
 import type { User, ChatInputCommandInteraction } from "discord.js";
 import { responses } from "./responses.js";
 
+const PLACEHOLDERS = /({user}|{target})/;
+const nums = '1234567890';
+const upperCase = 'QWERTYUIOPASDFGHJKLZXCVBNM';
+const lowerCase = 'qwertyuiopasdfghjklzxcvbnm';
+const symbols = '~!@#$%^&*?_';
+
+export const chars = [nums, upperCase, lowerCase, symbols, nums, symbols];
+
+const LEET: Record<string, string> = {
+    A: "4",
+    S: "5",
+    o: "0",
+    O: "0",
+    l: "1",
+    L: "1",
+    B: "8",
+};
+
 export function pickRandom<T>(arr: T[]): T {
     const index: number = Math.floor(Math.random() * arr.length);
     if (arr[index] === undefined) {
@@ -17,19 +35,35 @@ function format(str: string, user: User, target: User) {
     return str.replace(/{user}/g, user.toString()).replace(/{target}/g, target.toString());
 }
 
-export async function messages(command: string, interaction: ChatInputCommandInteraction, target: User, user: User) {
+function leetspeak(text: string): string {
+    return text
+        .split(PLACEHOLDERS)
+        .map((seg, i) =>
+            i % 2 === 0
+                ? seg
+                    .replace(/[ASoOlLB]/g, (c) => LEET[c]!)
+                    .replace(/f/g, "F")
+                    .replace(/m/g, "M")
+                : seg
+        )
+        .join("");
+}
 
+export async function messages(
+    command: string,
+    interaction: ChatInputCommandInteraction,
+    target: User,
+    user: User,
+) {
     const entry = responses[command];
     if (!entry) {
         return await interaction.editReply(`Unknown command: ${command}`);
     }
 
-    const bot = await interaction.client.users.fetch("1551408953865539666");
-
-    let raw;
-    if (user === target) {
-        raw = entry.self  || pickRandom(entry.options);
-    } else if (bot.id === target.id) {
+    let raw: string;
+    if (user.id === target.id) {
+        raw = entry.self || pickRandom(entry.options);
+    } else if (target.id === interaction.client.user.id) {
         raw = entry.bot || pickRandom(entry.options);
     } else {
         raw = pickRandom(entry.options);
@@ -37,35 +71,17 @@ export async function messages(command: string, interaction: ChatInputCommandInt
 
     if (Math.random() < 0.025) {
         if (Math.random() < 0.5) {
-            raw.replace('f', 'F');
-            raw.replace('m', 'M');
-            raw.replace('A', '4');
-            raw.replace('S', '5');
-            raw.replace('o', '0');
-            raw.replace('O', '0');
-            raw.replace('o', '0');
-            raw.replace('O', '0');
-            raw.replace('l', '1');
-            raw.replace('L', '1');
-            raw.replace('B', '8');
+            raw = leetspeak(raw);
         } else {
             raw = insertRandomChars(raw, getRandomInt(1, 10), pickRandom(chars));
         }
         if (Math.random() > 0.5) {
-            raw = '**Y0u th0ught y0u cou1d 3sCaPe *M3*?**'
+            raw = '**Y0u th0ught y0u cou1d 3sCaPe *M3*?**';
         }
     }
 
     return await interaction.editReply(format(raw, user, target));
 }
-
-const PLACEHOLDERS = /({user}|{target})/;
-const nums = '1234567890';
-const upperCase = 'QWERTYUIOPASDFGHJKLZXCVBNM';
-const lowerCase = 'qwertyuiopasdfghjklzxcvbnm';
-const symbols = '~!@#$%^&*?_';
-
-export const chars = [nums, upperCase, lowerCase, symbols, nums, symbols];
 
 export function insertRandomChars(
     text: string,
