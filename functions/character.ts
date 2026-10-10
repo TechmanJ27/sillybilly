@@ -87,6 +87,15 @@ export default async function characterInfo(interaction: ChatInputCommandInterac
 
     wikiDom.window.close();
 
-    await interaction.editReply({embeds: [embed]});
+    if (interaction.appPermissions?.has('EmbedLinks')) {
+        await interaction.editReply({ embeds: [embed]});
+    } else {
+        const fields = (embed.data.fields ?? [])
+            .map(f => `**${f.name}:** ${f.value}`)
+            .join('\n');
+        await interaction.editReply({
+            content: `**${embed.data.title ?? ''}**\n${embed.data.description ?? ''}\n${fields}`,
+        });
+    }
     return;
 }

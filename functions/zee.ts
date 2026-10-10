@@ -18,6 +18,15 @@ export default async function zeeInfo(interaction: ChatInputCommandInteraction) 
         .setLabel('Channel')
         .setStyle(ButtonStyle.Link);
     const row= new ActionRowBuilder<ButtonBuilder>().addComponents(youtubeButton);
-    await interaction.editReply({embeds: [embed], components: [row]});
+    if (interaction.appPermissions?.has('EmbedLinks')) {
+        await interaction.editReply({ embeds: [embed], components: [row] });
+    } else {
+        const fields = (embed.data.fields ?? [])
+            .map(f => `**${f.name}:** ${f.value}`)
+            .join('\n');
+        await interaction.editReply({
+            content: `**${embed.data.title ?? ''}**\n${embed.data.description ?? ''}\n${fields}`,
+        });
+    }
     return;
 }
