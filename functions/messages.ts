@@ -36,7 +36,7 @@ export async function messages(command: string, interaction: ChatInputCommandInt
     }
 
     if (Math.random() < 0.025) {
-        if (getRandomInt(0, 1) === 0) {
+        if (Math.random() < 0.5) {
             raw = raw.replace('f', 'F');
             raw = raw.replace('m', 'M');
             raw = raw.replace('A', '4');
@@ -46,6 +46,8 @@ export async function messages(command: string, interaction: ChatInputCommandInt
             raw = raw.replace('o', '0');
             raw = raw.replace('O', '0');
             raw = raw.replace('l', '1');
+            raw = raw.replace('L', '1');
+            raw = raw.replace('B', '8');
         } else {
             raw = insertRandomChars(raw, getRandomInt(1, 10), pickRandom(chars));
         }
