@@ -53,3 +53,30 @@ export function formatList(list: Element, depth = 0): string[] {
 
     return lines;
 }
+
+export function readSection(heading: Element): string {
+    const level = Number(heading.tagName.slice(1));
+    const parts: string[] = [];
+    let current = heading.nextElementSibling;
+
+    while (current) {
+        const tag = current.tagName;
+
+        if (/^H[1-6]$/.test(tag) && Number(tag.slice(1)) <= level) break;
+        if (tag === 'TABLE') break;
+
+        if (/^H[1-6]$/.test(tag)) {
+            const title = current.querySelector('.mw-headline')?.textContent?.trim();
+            if (title) parts.push(`**${title}**`);
+        } else if (tag === 'UL') {
+            parts.push(formatList(current).join('\n'));
+        } else if (tag === 'P') {
+            const text = current.textContent?.trim();
+            if (text) parts.push(text);
+        }
+
+        current = current.nextElementSibling;
+    }
+
+    return parts.join('\n\n');
+}

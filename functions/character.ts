@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom';
 import { type ChatInputCommandInteraction } from "discord.js";
-import {fetchSection, formatList, WikiEmbed} from "./wikiHelpers.js";
+import {fetchSection, readSection, WikiEmbed} from "./wikiHelpers.js";
 
 const INFOBOX_FIELDS = ['Age', 'Debut', 'Gender', 'Relationships'];
 
@@ -46,18 +46,13 @@ export default async function characterInfo(interaction: ChatInputCommandInterac
         content = 'image';
     } else {
         const span = doc.getElementById(field);
-        if (!span) {
+        const heading = span?.parentElement;
+        if (!heading) {
             await interaction.editReply(`${character} is missing the ${field} section.`);
             return;
         }
 
-        wikiElement = span.parentElement?.nextElementSibling ?? null;
-
-        if (field === 'Trivia' && wikiElement?.tagName === 'UL') {
-            content = formatList(wikiElement).join('\n');
-        } else {
-            content = wikiElement?.textContent?.trim();
-        }
+        content = readSection(heading);
     }
 
     if (!content) {
