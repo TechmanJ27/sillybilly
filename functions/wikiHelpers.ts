@@ -78,5 +78,5 @@ export function readSection(heading: Element): string {
         current = current.nextElementSibling;
     }
 
-    return parts.join('\n\n').replaceAll(/^\[*[0-9]{1,3}\]*$/g, '');
+    return parts.join('\n\n').replaceAll(/\[[0-9]{1,3}\]/g, '');
 }
