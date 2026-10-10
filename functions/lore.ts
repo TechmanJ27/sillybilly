@@ -22,7 +22,7 @@ export default async function loreInfo(interaction: ChatInputCommandInteraction)
     }
 
     const embed = new WikiEmbed()
-        .setTitle((field ?? '' )+ 'lore')
+        .setTitle(field + ' lore')
         .setDescription(content.slice(0, 4000));
 
     wikiDom.window.close();

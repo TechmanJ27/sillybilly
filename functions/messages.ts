@@ -35,14 +35,14 @@ export async function messages(command: string, interaction: ChatInputCommandInt
         raw = pickRandom(entry.options);
     }
 
-    const chars = [nums, upperCase, lowerCase, symbols, nums, symbols];
-
-    if (Math.random() === 0.025) {
+    if (Math.random() < 0.025) {
         if (getRandomInt(0, 1) === 0) {
             raw = raw.replace('f', 'F');
             raw = raw.replace('m', 'M');
             raw = raw.replace('A', '4');
             raw = raw.replace('S', '5');
+            raw = raw.replace('o', '0');
+            raw = raw.replace('O', '0');
             raw = raw.replace('o', '0');
             raw = raw.replace('O', '0');
             raw = raw.replace('l', '1');
@@ -62,6 +62,8 @@ const nums = '1234567890';
 const upperCase = 'QWERTYUIOPASDFGHJKLZXCVBNM';
 const lowerCase = 'qwertyuiopasdfghjklzxcvbnm';
 const symbols = '~!@#$%^&*?_';
+
+export const chars = [nums, upperCase, lowerCase, symbols, nums, symbols];
 
 export function insertRandomChars(
     text: string,
