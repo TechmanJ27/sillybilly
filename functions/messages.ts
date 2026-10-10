@@ -72,12 +72,9 @@ export function insertRandomChars(
     count = 1,
     chars: string = '1234567890',
 ): string {
-    // The capturing group keeps the placeholders in the result, so plain text
-    // lands on even indices and {user}/{target} on odd ones.
     const segments = text.split(PLACEHOLDERS);
 
     for (let n = 0; n < count; n++) {
-        // A plain segment of length L has L + 1 gaps. Placeholders have none.
         const weights = segments.map((seg, i) => (i % 2 === 0 ? seg.length + 1 : 0));
         const total = weights.reduce((sum, w) => sum + w, 0);
 
