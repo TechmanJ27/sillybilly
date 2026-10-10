@@ -32,7 +32,7 @@ export default {
         const embed = new EmbedBuilder()
             .setColor('#4EBDED')
             .setTitle(t)
-            .setDescription(d)
+            .setDescription(d);
 
         await interaction.editReply({embeds: [embed]});
     }

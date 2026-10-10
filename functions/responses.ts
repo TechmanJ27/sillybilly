@@ -29,12 +29,14 @@ export const responses: ResponseMap = {
     },
     basement: {
         self: `{user} got lost in their own basement`,
-        bot: ``,
-        options: [`OH NO! {target} IS TRAPPED IN {user}'S BASEMENT!!!`],
+        bot: `Puny mortal, you thought you could trap ME!?`,
+        options: [
+            `OH NO! {target} IS TRAPPED IN {user}'S BASEMENT!!!`
+        ],
     },
     growl: {
         self: `{user} must be angry at their inner demons or something, they’re growling at themself`,
-        bot: ``,
+        bot: `Don't growl at me!`,
         options: [
             `{user} just growled at {target} to assert dominance`,
             `{user} went GRRRRRRRRRR at {target}, they seem pretty angry`,
@@ -74,7 +76,10 @@ export const responses: ResponseMap = {
     paw: {
         self: `{user} paws at their reflection 🐾`,
         bot: `Woah there, don't be getting to excited`,
-        options: [`{user} paws at {target} 🐾. They must be hungry`],
+        options: [
+            `{user} paws at {target} 🐾. They must be hungry`,
+            `Gimme five... or, well, four~`
+        ],
     },
     banish: {
         self: `OH GOD {user} IS BANISHING THEMSELVES TO THE SHADOW REALM??? NOOOOOOOO`,
@@ -90,8 +95,7 @@ export const responses: ResponseMap = {
         bot: ``,
         options: [
             `Oh no, {user} is crying? Quick, someone go and cheer them up!`,
-            `{user} is sad. What are they sad about? Nobody knows`,
-            `{user} is crying, and they aren't happy tears`,
+            `{user} is crying, and they aren't happy tears :(`,
         ],
     },
     cake: {
@@ -99,6 +103,7 @@ export const responses: ResponseMap = {
         bot: `You baked a cake for me!`,
         options: [
             `{user} bakes a cake for {target}! What's the occasion?`,
+            `Is is {target}'s birthday? Why else would {user} be making them such a wonderful cake!`,
         ],
     },
     pie: {
@@ -110,38 +115,40 @@ export const responses: ResponseMap = {
         ],
     },
     nuzzle: {
-        self: ``,
-        bot: ``,
+        self: `Wooahh, how did you do that?`,
+        bot: `I'm not a furry I swear`,
         options: [
-            `{user} nuzzles {target}`
+            `{user} is attempting to spread the furry agenda by nuzzling {target}~`,
         ],
     },
     dance: {
         self: `{user} shows off their moves`,
-        bot: ``,
+        bot: `I'll dance with you :3`,
         options: [
             `{user} dances with {target}`,
+            `{user} spins {target} right round`
         ],
     },
     gun: {
         self: `{user} is secretly a gun. Don't tell anyone!`,
         bot: ``,
         options: [
-            `{user} is exercising their second amendment right and turning {target} into a rifle`
+            `{user} is exercising their second amendment right and turning {target} into a rifle`,
+            `Who has two thumbs and just got turned into a gun? That's right, {target}!\nThx {user} ^^`
         ],
     },
     scream: {
         self: `{user} screams into a pillow`,
         bot: `Oh, ok, I'll go hide in my corner again`,
         options: [
-
+            `{user} attempts to intimidate {target}! `,
         ],
     },
     explode: {
         self: `{user} explodes!`,
         bot: `Self-destruct sequence activated. Haha, just kidding!`,
         options: [
-            `{target} opens their mailbox to find...\nA pipe bomb from {user} 💥`
+            `{target} opens their mailbox to find...\nA pipe bomb from {user} 💥`,
         ],
     },
     murder: {
@@ -157,6 +164,14 @@ export const responses: ResponseMap = {
         bot: ``,
         options: [
             `{user} ascended to the heavens beyond, never to return`,
+            `{user} grows wings and flies away`
+        ],
+    },
+    rob: {
+        self: `You can't rob yourself, silly!`,
+        bot: `Joke's on you, I'm broke!`,
+        options: [
+            `{user} bumps into {target} and pickpockets a measly 5 cents from their pocket`
         ],
     },
 };
@@ -167,5 +182,5 @@ name: {
     bot: ``,
     options: [
     ],
-}
+},
 */

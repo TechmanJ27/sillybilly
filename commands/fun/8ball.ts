@@ -14,6 +14,6 @@ export default {
         ),
     async execute(interaction: ChatInputCommandInteraction) {
         const answers = ['Yes', 'No', 'Perhaps', 'Unclear', 'Come back later :3', 'Maybe~', 'No shot'];
-        await interaction.reply(`🎱 ${pickRandom(answers)}`)
+        await interaction.reply(`🎱 ${pickRandom(answers)}`);
     }
 }

@@ -4,7 +4,6 @@ import { Client, Collection, GatewayIntentBits, Partials} from 'discord.js';
 import 'dotenv/config';
 import { fileURLToPath } from 'node:url';
 
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent], partials: [Partials.Channel, Partials.Message] });
 
 client.commands = new Collection();

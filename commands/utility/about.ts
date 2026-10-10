@@ -1,9 +1,10 @@
-import {type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder} from "discord.js";
+import {type ChatInputCommandInteraction, EmbedBuilder, InteractionContextType, SlashCommandBuilder} from "discord.js";
 
 export default {
     data: new SlashCommandBuilder()
         .setName("about")
-        .setDescription('Who am I?'),
+        .setDescription('Who am I?')
+        .setContexts(InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel),
 
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply();
