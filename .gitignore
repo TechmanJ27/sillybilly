@@ -1,5 +1,5 @@
 node_modules
-silly.env
+.env
 config.json
 /data/*
 .gitignore
