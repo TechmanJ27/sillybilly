@@ -9,6 +9,7 @@ const __dirname = path.dirname(__filename);
 export default {
     name: Events.InteractionCreate,
     async execute(interaction: Interaction) {
+
         if (interaction.isAutocomplete()) {
             const command = interaction.client.commands.get(interaction.commandName);
             await command?.autocomplete?.(interaction);
@@ -34,7 +35,7 @@ export default {
                 if ((disabled[interaction.guildId] ?? []).includes(command.data.name)) return await interaction.reply({content: 'This command has been disabled in this guild'});
             }
 
-            const { cooldowns } = interaction.client;
+            const {cooldowns} = interaction.client;
 
             if (!cooldowns.has(command.data.name)) {
                 cooldowns.set(command.data.name, new Collection());
@@ -68,19 +69,23 @@ export default {
             try {
                 await command.execute(interaction);
             } catch (error) {
-                console.error(error);
-                if (interaction.replied || interaction.deferred) {
-                    await interaction.followUp({
-                        content: "There was an error while executing this command!",
-                        flags: MessageFlags.Ephemeral,
-                    });
-                } else {
-                    await interaction.reply({
-                        content: "There was an error while executing this command!",
-                        flags: MessageFlags.Ephemeral,
-                    });
+                console.error(`Error executing command ${interaction.commandName}:`, error);
+
+                const errorPayload = {
+                    content: 'There was an error while executing this command!',
+                    flags: 64
+                };
+
+                try {
+                    if (interaction.deferred || interaction.replied) {
+                        await interaction.editReply(errorPayload);
+                    } else {
+                        await interaction.reply(errorPayload);
+                    }
+                } catch (apiError: any) {
+                    console.error("Failed to send error message back to Discord channel:", apiError.message);
                 }
             }
         }
-    },
-};
+    }
+}
