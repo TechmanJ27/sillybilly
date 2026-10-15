@@ -1,6 +1,6 @@
-import {Message} from 'discord.js';
+import {Message, Client} from 'discord.js';
 
-export function reactionsRegister(client) {
+export function reactionsRegister(client: Client) {
     client.on('messageCreate', (message: Message) => {
         const raw = message.content.toLowerCase();
         if (raw.includes('silly') || raw.includes('billy')){
