@@ -8,7 +8,7 @@ export function reactionsRegister(client: Client) {
             message.reply('What a sillybilly');
         }
         if (message.channel.type === 'dm') {
-            console.log(`${message.author.username}\n${message.content}`);
+            console.log(`<@${message.author.username}> ${message.content}`);
         }
     });
 }
