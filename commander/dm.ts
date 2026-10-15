@@ -1,12 +1,8 @@
 import { Command } from 'commander';
 const program = new Command();
-import {Client} from 'discord.js';
+import {client} from '../index.js';
 
-let commandClient: Client;
-
-export function registerClient(client: Client) {
-  commandClient = client;
-};
+const commandClient = client;
 
 program
   .name('dm-util')
