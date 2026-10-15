@@ -2,7 +2,7 @@ import { Command } from 'commander';
 const program = new Command();
 import {Client} from 'discord.js';
 
-let commandClient;
+let commandClient: Client;
 
 export function registerClient(client: Client) {
   commandClient = client;
