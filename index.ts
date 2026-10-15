@@ -4,7 +4,7 @@ import { Client, Collection, GatewayIntentBits, Partials} from 'discord.js';
 import 'dotenv/config';
 import { fileURLToPath } from 'node:url';
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent], partials: [Partials.Channel, Partials.Message] });
+export const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent], partials: [Partials.Channel, Partials.Message] });
 
 client.commands = new Collection();
 client.cooldowns = new Collection();
@@ -52,7 +52,5 @@ for (const file of eventFiles) {
 
 import {reactionsRegister} from './events/messageCreate.js';
 reactionsRegister(client);
-import {registerClient} from './commander/dm.js';
-registerClient(client);
 
 client.login(process.env.TOKEN);
