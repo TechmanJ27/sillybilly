@@ -52,5 +52,7 @@ for (const file of eventFiles) {
 
 import {reactionsRegister} from './events/messageCreate.js';
 reactionsRegister(client);
+import {registerClient} from './commander/dm.js';
+registerClient(client);
 
 client.login(process.env.TOKEN);
