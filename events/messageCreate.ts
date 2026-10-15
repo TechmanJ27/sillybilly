@@ -7,8 +7,5 @@ export function reactionsRegister(client: Client) {
             // message.react('123456789012345678'); 
             message.reply('What a sillybilly');
         }
-        if (message.channel.isDMBased()) {
-            console.log(`<@${message.author.username}> ${message.content}`);
-        }
     });
 }
