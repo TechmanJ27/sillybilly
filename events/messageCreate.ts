@@ -1,4 +1,3 @@
-
 export function reactionsRegister {
     client.on('messageCreate', (message) => {
         const raw = message.content.toLowerCase();
