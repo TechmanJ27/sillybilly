@@ -50,4 +50,6 @@ for (const file of eventFiles) {
 	}
 }
 
+reactionsRegister();
+
 client.login(process.env.TOKEN);
