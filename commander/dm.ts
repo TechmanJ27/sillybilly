@@ -5,7 +5,7 @@ import {client} from '../index.js';
 const commandClient = client;
 
 program
-  .name('dm-util')
+  .name('dm')
   .description('CLI to DM a specific user')
   .version('0.8.0');
 
