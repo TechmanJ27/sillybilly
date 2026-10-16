@@ -50,4 +50,7 @@ for (const file of eventFiles) {
 	}
 }
 
+import {reactionsRegister} from './events/messageCreate.js';
+reactionsRegister(client);
+
 client.login(process.env.TOKEN);
