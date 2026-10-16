@@ -1,12 +1,20 @@
 import {Message, Client} from 'discord.js';
+import {dev} from "../index.js";
 
 export function reactionsRegister(client: Client) {
     client.on('messageCreate', async (message: Message) => {
         const raw = message.content.toLowerCase();
+        if (message.author.bot) return;
+        if (message.author.id === dev) {
+            if (raw.includes('i love you sillybilly') || raw.includes('i love you silly billy') || raw.includes('ily silly billy') || raw.includes('ily sillybilly')) {
+                return await message.reply('I love you too ♡');
+            }
+        }
         if (raw.includes('silly') || raw.includes('billy')) {
             // message.react('123456789012345678');
-            if (message.author.bot) return;
-            await message.reply('What a sillybilly');
+            if (message.author.id !== dev) {
+                return await message.reply('What a sillybilly');
+            }
         }
     });
 }
