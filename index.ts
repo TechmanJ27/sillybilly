@@ -6,8 +6,6 @@ import { fileURLToPath } from 'node:url';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent], partials: [Partials.Channel, Partials.Message] });
 
-export const dev = '1049795757978435625';
-
 client.commands = new Collection();
 client.cooldowns = new Collection();
 const __filename = fileURLToPath(import.meta.url);

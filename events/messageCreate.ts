@@ -1,5 +1,5 @@
 import {Message, Client} from 'discord.js';
-import {dev} from "../index.js";
+export const dev = '1049795757978435625';
 
 export function reactionsRegister(client: Client) {
     client.on('messageCreate', async (message: Message) => {
