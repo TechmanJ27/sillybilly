@@ -54,3 +54,7 @@ import {reactionsRegister} from './events/messageCreate.js';
 reactionsRegister(client);
 
 client.login(process.env.TOKEN);
+
+client.on('error', (error) => {
+	console.error('A network or Discord API error occurred:', error);
+});

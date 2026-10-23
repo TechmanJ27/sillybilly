@@ -1,55 +1,101 @@
 import { Events, MessageFlags, Collection, type Interaction } from "discord.js";
 import path from "node:path";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const disabledPath = path.join(__dirname, "..", "data", "disabled.json");
+
+type DisabledMap = Record<string, string[]>;
+
+let disabledCache: DisabledMap = {};
+let disabledMtimeMs = -1;
+
+async function loadDisabled(): Promise<DisabledMap> {
+    let mtimeMs: number;
+    try {
+        ({ mtimeMs } = await fs.stat(disabledPath));
+    } catch (error: any) {
+        if (error?.code !== "ENOENT") {
+            console.error("Failed to stat disabled commands file:", error);
+        }
+        disabledCache = {};
+        disabledMtimeMs = -1;
+        return disabledCache;
+    }
+
+    if (mtimeMs === disabledMtimeMs) return disabledCache;
+
+    disabledMtimeMs = mtimeMs;
+    try {
+        const parsed = JSON.parse(await fs.readFile(disabledPath, "utf8"));
+        disabledCache = parsed !== null && typeof parsed === "object" ? parsed : {};
+    } catch (error) {
+        console.error("Failed to read disabled commands file:", error);
+    }
+    return disabledCache;
+}
+
+async function isCommandDisabled(guildId: string | null, commandName: string): Promise<boolean> {
+    if (guildId === null) return false;
+    const list = (await loadDisabled())[guildId];
+    return Array.isArray(list) && list.includes(commandName);
+}
 
 export default {
     name: Events.InteractionCreate,
     async execute(interaction: Interaction) {
 
         if (interaction.isAutocomplete()) {
-            const command = interaction.client.commands.get(interaction.commandName);
-            await command?.autocomplete?.(interaction);
+            try {
+                const command = interaction.client.commands.get(interaction.commandName);
+
+                if (await isCommandDisabled(interaction.guildId, interaction.commandName)) {
+                    await interaction.respond([]);
+                    return;
+                }
+
+                await command?.autocomplete?.(interaction);
+            } catch (error) {
+                console.error(`Autocomplete failed for ${interaction.commandName}:`, error);
+            }
             return;
         }
 
         if (!interaction.isChatInputCommand()) return;
-        if (interaction.isChatInputCommand()) {
-            const command = interaction.client.commands.get(
-                interaction.commandName,
-            );
 
-            if (!command) {
-                console.error(
-                    `No command matching ${interaction.commandName} was found.`,
-                );
-                return;
+        const command = interaction.client.commands.get(interaction.commandName);
+
+        if (!command) {
+            console.error(`No command matching ${interaction.commandName} was found.`);
+            return;
+        }
+
+        if (await isCommandDisabled(interaction.guildId, command.data.name)) {
+            return await interaction.reply({
+                content: "This command has been disabled in this guild",
+                flags: MessageFlags.Ephemeral,
+            });
+        }
+
+        const { cooldowns } = interaction.client;
+        const cooldownAmount = (command.cooldown ?? 0) * 1_000;
+        const userId = interaction.user.id;
+        const now = Date.now();
+        let timestamps: Collection<string, number> | undefined;
+
+        if (cooldownAmount > 0) {
+            timestamps = cooldowns.get(command.data.name);
+            if (!timestamps) {
+                timestamps = new Collection<string, number>();
+                cooldowns.set(command.data.name, timestamps);
             }
 
-            const disabledPath = path.join(__dirname, '..', 'data', 'disabled.json');
-            const disabled = JSON.parse(fs.readFileSync(disabledPath, 'utf8'));
-            if (interaction.guildId !== null) {
-                if ((disabled[interaction.guildId] ?? []).includes(command.data.name)) return await interaction.reply({content: 'This command has been disabled in this guild'});
-            }
-
-            const {cooldowns} = interaction.client;
-
-            if (!cooldowns.has(command.data.name)) {
-                cooldowns.set(command.data.name, new Collection());
-            }
-
-            const now = Date.now();
-            const timestamps = cooldowns.get(command.data.name);
-            const defaultCooldownDuration = 0;
-            const cooldownAmount =
-                (command.cooldown ?? defaultCooldownDuration) * 1_000;
-
-            if (timestamps!.has(interaction.user.id)) {
-                const expirationTime =
-                    timestamps!.get(interaction.user.id)! + cooldownAmount;
+            const lastUsed = timestamps.get(userId);
+            if (lastUsed !== undefined) {
+                const expirationTime = lastUsed + cooldownAmount;
 
                 if (now < expirationTime) {
                     const expiredTimestamp = Math.round(expirationTime / 1_000);
@@ -60,32 +106,34 @@ export default {
                 }
             }
 
-            timestamps!.set(interaction.user.id, now);
-            setTimeout(
-                () => timestamps!.delete(interaction.user.id),
-                cooldownAmount,
-            );
+            const activeTimestamps = timestamps;
+            activeTimestamps.set(userId, now);
+            setTimeout(() => {
+                if (activeTimestamps.get(userId) === now) activeTimestamps.delete(userId);
+            }, cooldownAmount);
+        }
+
+        try {
+            await command.execute(interaction);
+        } catch (error) {
+            console.error(`Error executing command ${interaction.commandName}:`, error);
+
+            if (timestamps?.get(userId) === now) timestamps.delete(userId);
+
+            const errorPayload = {
+                content: "There was an error while executing this command!",
+                flags: MessageFlags.Ephemeral,
+            } as const;
 
             try {
-                await command.execute(interaction);
-            } catch (error) {
-                console.error(`Error executing command ${interaction.commandName}:`, error);
-
-                const errorPayload = {
-                    content: 'There was an error while executing this command!',
-                    flags: 64
-                };
-
-                try {
-                    if (interaction.deferred || interaction.replied) {
-                        await interaction.editReply(errorPayload);
-                    } else {
-                        await interaction.reply(errorPayload);
-                    }
-                } catch (apiError: any) {
-                    console.error("Failed to send error message back to Discord channel:", apiError.message);
+                if (interaction.replied || interaction.deferred) {
+                    await interaction.followUp(errorPayload);
+                } else {
+                    await interaction.reply(errorPayload);
                 }
+            } catch (apiError: any) {
+                console.error("Failed to send error message back to Discord channel:", apiError.message);
             }
         }
-    }
-}
+    },
+};
