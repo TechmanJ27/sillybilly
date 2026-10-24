@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const disabledPath = path.join(__dirname, "..", "..", "data", "disabled.json");
+export const disabledPath = path.join(__dirname, "", "..", "data", "disabled.json");
 
 export type DisabledMap = Record<string, string[]>;
 
