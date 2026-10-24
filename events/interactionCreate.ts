@@ -1,46 +1,9 @@
 import { Events, MessageFlags, Collection, type Interaction } from "discord.js";
-import path from "node:path";
-import fs from "node:fs/promises";
-import { fileURLToPath } from "node:url";
+import { disabledCache } from "../functions/commandCache.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const disabledPath = path.join(__dirname, "..", "data", "disabled.json");
-
-type DisabledMap = Record<string, string[]>;
-
-let disabledCache: DisabledMap = {};
-let disabledMtimeMs = -1;
-
-async function loadDisabled(): Promise<DisabledMap> {
-    let mtimeMs: number;
-    try {
-        ({ mtimeMs } = await fs.stat(disabledPath));
-    } catch (error: any) {
-        if (error?.code !== "ENOENT") {
-            console.error("Failed to stat disabled commands file:", error);
-        }
-        disabledCache = {};
-        disabledMtimeMs = -1;
-        return disabledCache;
-    }
-
-    if (mtimeMs === disabledMtimeMs) return disabledCache;
-
-    disabledMtimeMs = mtimeMs;
-    try {
-        const parsed = JSON.parse(await fs.readFile(disabledPath, "utf8"));
-        disabledCache = parsed !== null && typeof parsed === "object" ? parsed : {};
-    } catch (error) {
-        console.error("Failed to read disabled commands file:", error);
-    }
-    return disabledCache;
-}
-
-async function isCommandDisabled(guildId: string | null, commandName: string): Promise<boolean> {
-    if (guildId === null) return false;
-    const list = (await loadDisabled())[guildId];
+function isCommandDisabledSync(guildId: string | null, commandName: string): boolean {
+    if (!guildId) return false;
+    const list = disabledCache[guildId];
     return Array.isArray(list) && list.includes(commandName);
 }
 
@@ -51,12 +14,10 @@ export default {
         if (interaction.isAutocomplete()) {
             try {
                 const command = interaction.client.commands.get(interaction.commandName);
-
-                if (await isCommandDisabled(interaction.guildId, interaction.commandName)) {
+                if (isCommandDisabledSync(interaction.guildId, interaction.commandName)) {
                     await interaction.respond([]);
                     return;
                 }
-
                 await command?.autocomplete?.(interaction);
             } catch (error) {
                 console.error(`Autocomplete failed for ${interaction.commandName}:`, error);
@@ -67,13 +28,12 @@ export default {
         if (!interaction.isChatInputCommand()) return;
 
         const command = interaction.client.commands.get(interaction.commandName);
-
         if (!command) {
             console.error(`No command matching ${interaction.commandName} was found.`);
             return;
         }
 
-        if (await isCommandDisabled(interaction.guildId, command.data.name)) {
+        if (isCommandDisabledSync(interaction.guildId, command.data.name)) {
             return await interaction.reply({
                 content: "This command has been disabled in this guild",
                 flags: MessageFlags.Ephemeral,
@@ -119,6 +79,11 @@ export default {
             console.error(`Error executing command ${interaction.commandName}:`, error);
 
             if (timestamps?.get(userId) === now) timestamps.delete(userId);
+
+            if (error instanceof Error && error.message.includes("Unknown interaction")) {
+                console.warn("Could not alert user: The Discord interaction context has already expired.");
+                return;
+            }
 
             const errorPayload = {
                 content: "There was an error while executing this command!",

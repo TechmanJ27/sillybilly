@@ -51,7 +51,9 @@ for (const file of eventFiles) {
 }
 
 import {reactionsRegister} from './events/messageCreate.js';
+import {initializeDisabledCache} from "./functions/commandCache.js";
 reactionsRegister(client);
+initializeDisabledCache();
 
 client.login(process.env.TOKEN);
 
