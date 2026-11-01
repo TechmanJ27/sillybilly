@@ -1,11 +1,6 @@
-import {
-    Collection,
-    GuildMember,
-    PermissionFlagsBits,
-    type GuildTextBasedChannel,
-} from "discord.js";
+import { Collection, GuildMember, PermissionFlagsBits, type GuildTextBasedChannel } from "discord.js";
 
-export type MarkovEntry = { dateTime: number; weights: Map<string, string[]> };
+export type MarkovEntry = { dateTime: number; weights: Map<string, string[]>; };
 
 export const markovWeights = new Collection<string, MarkovEntry>();
 
@@ -70,7 +65,6 @@ export async function generateMarkovWeights(user: GuildMember) {
     const messages = await indexMessages(user, 500);
     if (messages.length === 0) return undefined;
 
-    // Rebuilt from scratch each run, so repeat calls don't double-count.
     const weights = new Map<string, string[]>();
 
     for (const message of messages) {
@@ -82,8 +76,8 @@ export async function generateMarkovWeights(user: GuildMember) {
         for (let i = 0; i < tokens.length - 1; i++) {
             const current = tokens[i]!;
             const next = tokens[i + 1]!;
-
             const nexts = weights.get(current);
+
             if (nexts) {
                 nexts.push(next);
             } else {
@@ -92,6 +86,10 @@ export async function generateMarkovWeights(user: GuildMember) {
         }
     }
 
-    markovWeights.set(user.id, { dateTime: Math.floor(Date.now() / 1000), weights });
+    markovWeights.set(user.id, {
+        dateTime: Math.floor(Date.now() / 1000),
+        weights,
+    });
+
     return weights;
 }
