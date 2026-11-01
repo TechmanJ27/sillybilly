@@ -23,7 +23,7 @@ export default {
             )
         ),
 
-    async interaction(interaction: ChatInputCommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         const subcommandGroup = interaction.options.getSubcommandGroup();
         if (!subcommandGroup) return;
 
