@@ -9,10 +9,6 @@ export function pickRandom<T>(arr: T[]): T {
     return arr[index];
 }
 
-export function getRandomInt(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function format(str: string, user: User, target: User) {
     return str.replace(/{user}/g, user.toString()).replace(/{target}/g, target.toString());
 }
