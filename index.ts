@@ -3,6 +3,7 @@ import path from 'node:path';
 import { Client, Collection, GatewayIntentBits, Partials} from 'discord.js';
 import 'dotenv/config';
 import { fileURLToPath } from 'node:url';
+import {initializeDisabledCache} from "./functions/commandCache.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent], partials: [Partials.Channel, Partials.Message] });
 
@@ -50,9 +51,6 @@ for (const file of eventFiles) {
 	}
 }
 
-import {reactionsRegister} from './events/messageCreate.js';
-import {initializeDisabledCache} from "./functions/commandCache.js";
-reactionsRegister(client);
 initializeDisabledCache();
 
 client.login(process.env.TOKEN);
