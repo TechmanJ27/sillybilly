@@ -44,7 +44,7 @@ export default {
         case 100:
           return "\n-# d100";
         default:
-          return `${sides}-sided die`;
+          return `\n-# ${sides}-sided die`;
       }
     }
 
