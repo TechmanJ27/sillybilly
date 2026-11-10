@@ -7,7 +7,7 @@ export default {
     .addIntegerOption(option =>
       option
         .setName("sides")
-        .setDescription("some name i guess")
+        .setDescription("How many sides the dice should have")
         .setMinValue(2)
         .setRequired(true)
     ),
