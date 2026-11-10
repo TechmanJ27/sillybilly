@@ -2,8 +2,8 @@ import {SlashCommandBuilder, type ChatInputCommandInteraction} from "discord.js"
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("roll");
-    .setDescription("Roll a dice - Or, flip a coin");
+    .setName("roll")
+    .setDescription("Roll a dice - Or, flip a coin")
     .addIntegerOption(option =>
       option
         .setName("sides")
@@ -27,10 +27,8 @@ export default {
 
     const result = Math.floor(Math.random() * sides) + 1;
 
-    const footer = (result, sides) => {
+    const footer = (result: number, sides: number) => {
       switch (sides) {
-        case 2:
-          return ";
         case 4:
           return "\n-# d4";
         case 6:
@@ -43,7 +41,7 @@ export default {
           return "\n-# d12";
         case 20:
           return result == 1 ? " - Nat1\n-# d20" : (result == 20 ? " - Nat20\n-# d20" : "\n-# d20")
-        case 10:
+        case 100:
           return "\n-# d100";
         default:
           return `${sides}-sided die`;
