@@ -1,5 +1,5 @@
-import {ChatInputCommandInteraction, InteractionContextType, MessageFlags, SlashCommandBuilder} from "discord.js";
-import { generateMarkovWeights, markovWeights } from "../../functions/markov_index.js";
+import {ChatInputCommandInteraction, InteractionContextType, MessageFlags, SlashCommandBuilder, Collection} from "discord.js";
+import { generateMarkovWeights, markovWeights, type MarkovEntry } from "../../functions/markov_index.js";
 import { generateMarkovstr } from "../../functions/markov_engine.js";
 
 export default {
@@ -39,7 +39,7 @@ export default {
             });
 
             if (!markovWeights.has(interaction.guildId)) {
-                markovWeights[interaction.guildId] = new Collection<string, MarkovEntry>();
+                markovWeights.set(interaction.guildId, new Collection<string, MarkovEntry>());
             }
 
             const entry = markovWeights.get(member.id);
