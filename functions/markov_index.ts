@@ -1,6 +1,6 @@
-import { Collection, GuildMember, PermissionFlagsBits, type GuildTextBasedChannel } from "discord.js";
+import { Collection, GuildMember, PermissionFlagsBits, type GuildTextBasedChannel, type Snowflake} from "discord.js";
 
-export type MarkovEntry = { dateTime: number; weights: Map<string, string[]>; };
+export type MarkovEntry = { guildId: Snowflake, dateTime: number; weights: Map<string, string[]>; };
 
 export const markovWeights = new Collection<string, MarkovEntry>();
 
