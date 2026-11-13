@@ -2,7 +2,7 @@ import { Collection, GuildMember, PermissionFlagsBits, type GuildTextBasedChanne
 
 export type MarkovEntry = {dateTime: number; weights: Map<string, string[]>; };
 
-export const markovWeights = new Collection<Snowflake, Collection<string, MarkovEntry>()>;
+export const markovWeights = new Collection<Snowflake, Collection<string, MarkovEntry>>;
 
 async function fetchInChannel(
     channel: GuildTextBasedChannel,
