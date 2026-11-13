@@ -38,6 +38,10 @@ export default {
                 allowedMentions: { parse: [] },
             });
 
+            if (!markovWeights.has(interaction.guildId)) {
+                markovWeights[interaction.guildId] = new Collection<string, MarkovEntry>();
+            }
+
             const entry = markovWeights.get(member.id);
             const now = Math.floor(Date.now() / 1000);
             if (!entry || now - entry.dateTime > 86400) {
