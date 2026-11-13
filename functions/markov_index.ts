@@ -2,7 +2,7 @@ import { Collection, GuildMember, PermissionFlagsBits, type GuildTextBasedChanne
 
 export type MarkovEntry = {dateTime: number; weights: Map<string, string[]>; };
 
-export const markovWeights = new Collection<Snowflake, Collection<string, MarkovEntry>>;
+export const markovWeights = new Collection<Snowflake, Collection<Snowflake, MarkovEntry>>();
 
 async function fetchInChannel(
     channel: GuildTextBasedChannel,
@@ -86,7 +86,8 @@ export async function generateMarkovWeights(user: GuildMember) {
         }
     }
 
-    markovWeights.set(user.id, {
+    const guildWeights = markovWeights.ensure(user.id, () => new Collection());
+    guildWeights.set(user.guild.id, {
         dateTime: Math.floor(Date.now() / 1000),
         weights,
     });
