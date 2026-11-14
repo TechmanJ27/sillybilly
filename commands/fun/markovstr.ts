@@ -42,13 +42,13 @@ export default {
                 markovWeights.set(interaction.guildId, new Collection<string, MarkovEntry>());
             }
 
-            const entry = markovWeights.get(member.id);
+            const entry = markovWeights.get(interaction.guildId)?.get(member.id);
             const now = Math.floor(Date.now() / 1000);
             if (!entry || now - entry.dateTime > 86400) {
                 await generateMarkovWeights(member);
             }
 
-            const text = generateMarkovstr(member.id).slice(0, 2000);
+            const text = generateMarkovstr(interaction.guildId, member.id).slice(0, 2000);
             if (!text) {
                 await interaction.followUp({
                     content: "I couldn't find any messages from that user to learn from.",

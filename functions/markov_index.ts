@@ -1,8 +1,8 @@
-import { Collection, GuildMember, PermissionFlagsBits, type GuildTextBasedChannel, type Snowflake} from "discord.js";
+import { Collection, GuildMember, PermissionFlagsBits, type GuildTextBasedChannel} from "discord.js";
 
 export type MarkovEntry = {dateTime: number; weights: Map<string, string[]>; };
 
-export const markovWeights = new Collection<Snowflake, Collection<Snowflake, MarkovEntry>>();
+export const markovWeights = new Collection<String, Collection<String, MarkovEntry>>();
 
 async function fetchInChannel(
     channel: GuildTextBasedChannel,

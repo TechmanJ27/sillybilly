@@ -5,8 +5,8 @@ function pickRandom<T>(items: T[]): T | undefined {
     return items[Math.floor(Math.random() * items.length)];
 }
 
-export function generateMarkovstr(userId: string): string {
-    const weights = markovWeights.get(userId)?.weights;
+export function generateMarkovstr(guildId: string, userId: string): string {
+    const weights = markovWeights.get(guildId)?.get(userId)?.weights;
     if (!weights) return '';
 
     const words: string[] = [];
