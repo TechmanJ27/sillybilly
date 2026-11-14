@@ -5,7 +5,7 @@ import { generateMarkovstr } from "../../functions/markov_engine.js";
 export default {
     data: new SlashCommandBuilder()
         .setName("markovstr")
-        .setDescription("Generate a markov string based on a users messages")
+        .setDescription("Generate a Markov string based on a users messages")
         .setContexts(InteractionContextType.Guild)
         .addUserOption((option) =>
             option
@@ -34,7 +34,7 @@ export default {
             }
 
             await interaction.reply({
-                content: `Generating markov string... User: <@${member.id}>`,
+                content: `Generating Markov string... User: <@${member.id}>`,
                 allowedMentions: { parse: [] },
             });
 
@@ -42,9 +42,10 @@ export default {
                 markovWeights.set(interaction.guildId, new Collection<string, MarkovEntry>());
             }
 
-            const entry = markovWeights.get(interaction.guildId)?.get(member.id);
+            const guildEntry = markovWeights.get(interaction.guildId);
+            const userEntry = guildEntry?.get(member.id);
             const now = Math.floor(Date.now() / 1000);
-            if (!entry || now - entry.dateTime > 86400) {
+            if (!guildEntry || !userEntry || now - userEntry.dateTime > 86400) {
                 await generateMarkovWeights(member);
             }
 

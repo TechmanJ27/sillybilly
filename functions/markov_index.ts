@@ -76,10 +76,10 @@ export async function generateMarkovWeights(user: GuildMember) {
         for (let i = 0; i < tokens.length - 1; i++) {
             const current = tokens[i]!;
             const next = tokens[i + 1]!;
-            const nexts = weights.get(current);
+            const followers = weights.get(current);
 
-            if (nexts) {
-                nexts.push(next);
+            if (followers) {
+                followers.push(next);
             } else {
                 weights.set(current, [next]);
             }
