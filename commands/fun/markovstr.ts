@@ -1,17 +1,29 @@
-import {ChatInputCommandInteraction, InteractionContextType, MessageFlags, SlashCommandBuilder, Collection} from "discord.js";
-import { generateMarkovWeights, globalWeights, type MarkovEntry } from "../../functions/markov_index.js";
+import {
+    ChatInputCommandInteraction,
+    InteractionContextType,
+    MessageFlags,
+    SlashCommandBuilder,
+    Collection,
+} from "discord.js";
+import {
+    generateMarkovWeights,
+    globalWeights,
+    type MarkovEntry,
+} from "../../functions/markov_index.js";
 import { generateMarkovstr } from "../../functions/markov_engine.js";
+
+const activeGenerations = new Set<string>();
 
 export default {
     data: new SlashCommandBuilder()
         .setName("markovstr")
-        .setDescription("Generate a Markov string based on a users messages")
+        .setDescription("Generate a Markov string based on a user's messages")
         .setContexts(InteractionContextType.Guild)
         .addUserOption((option) =>
             option
                 .setName("user")
                 .setDescription("The user to train on")
-                .setRequired(true)
+                .setRequired(true),
         ),
 
     async execute(interaction: ChatInputCommandInteraction) {
@@ -23,29 +35,40 @@ export default {
             return;
         }
 
-        try {
-            const member = interaction.options.getMember("user");
-            if (!member) {
-                await interaction.reply({
-                    content: "User not found in this server.",
-                    flags: MessageFlags.Ephemeral,
-                });
-                return;
-            }
-
+        const member = interaction.options.getMember("user");
+        if (!member) {
             await interaction.reply({
-                content: `Generating Markov string... User: <@${member.id}>`,
-                allowedMentions: { parse: [] },
+                content: "User not found in this server.",
+                flags: MessageFlags.Ephemeral,
             });
+            return;
+        }
 
-            let guildEntry = globalWeights.get(interaction.guildId);
-            if (!guildEntry) {
-                globalWeights.set(interaction.guildId, new Collection<string, MarkovEntry>());
-                guildEntry = globalWeights.get(interaction.guildId);
-            }
+        const lockKey = `${interaction.guildId}:${member.id}`;
+        if (activeGenerations.has(lockKey)) {
+            await interaction.reply({
+                content: "Already generating a Markov string for that user. Please wait a moment and try again.",
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
 
-            const userEntry = guildEntry?.get(member.id);
+        await interaction.reply({
+            content: `Generating Markov string... User: <@${member.id}>`,
+            allowedMentions: { parse: [] },
+        });
+
+        activeGenerations.add(lockKey);
+
+        try {
+            const guildEntry = globalWeights.ensure(
+                interaction.guildId,
+                () => new Collection<string, MarkovEntry>(),
+            );
+
+            const userEntry = guildEntry.get(member.id);
             const now = Math.floor(Date.now() / 1000);
+
             if (!userEntry || now - userEntry.dateTime > 86400) {
                 await generateMarkovWeights(member);
             }
@@ -58,12 +81,19 @@ export default {
                 return;
             }
 
-            await interaction.followUp({ content: text, allowedMentions: { parse: [] } });
-        } catch (err: any) {
-            console.log(err);
             await interaction.followUp({
-                content: "Something went wrong",
-            }).catch(() => {});
+                content: text,
+                allowedMentions: { parse: [] },
+            });
+        } catch (err) {
+            console.error(err);
+            await interaction
+                .followUp({
+                    content: "Something went wrong",
+                })
+                .catch(() => {});
+        } finally {
+            activeGenerations.delete(lockKey);
         }
     },
 };

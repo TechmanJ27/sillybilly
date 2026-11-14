@@ -2,62 +2,99 @@ import { Collection, GuildMember, PermissionFlagsBits, type GuildTextBasedChanne
 
 export type MarkovEntry = {dateTime: number; weights: Map<string, string[]>; };
 
-export const globalWeights = new Collection<String, Collection<String, MarkovEntry>>();
+export const globalWeights = new Collection<string, Collection<string, MarkovEntry>>();
 
 async function fetchInChannel(
     channel: GuildTextBasedChannel,
     authorId: string,
-    maxMessages: number,
-): Promise<string[]> {
-    const found: string[] = [];
+    maxMessagesToScan: number,
+    collected: string[],
+    maxTotalMessages: number,
+): Promise<void> {
     let before: string | undefined;
     let scanned = 0;
 
-    while (scanned < maxMessages) {
-        const limit = Math.min(100, maxMessages - scanned);
+    while (scanned < maxMessagesToScan && collected.length < maxTotalMessages) {
+        const limit = Math.min(100, maxMessagesToScan - scanned);
         const batch = await channel.messages.fetch({
             limit,
             ...(before ? { before } : {}),
         });
+
         if (batch.size === 0) break;
 
         for (const message of batch.values()) {
+            if (collected.length >= maxTotalMessages) break;
+
             if (message.author.id === authorId && message.content) {
-                found.push(message.content);
+                collected.push(message.content);
             }
         }
 
         scanned += batch.size;
         before = batch.lastKey();
+
         if (!before || batch.size < limit) break;
     }
-
-    return found;
 }
 
 export async function indexMessages(
     user: GuildMember,
     maxMessagesPerChannel: number,
+    maxTotalMessages = 1500,
+    concurrency = 4,
 ): Promise<string[]> {
     const me = user.guild.members.me;
+    if (!me) return [];
+
+    const neededBotPerms = [
+        PermissionFlagsBits.ViewChannel,
+        PermissionFlagsBits.ReadMessageHistory,
+    ];
+
+    const readableChannels = [...user.guild.channels.cache.values()].filter(
+        (channel): channel is GuildTextBasedChannel => {
+            if (!channel.isTextBased() || channel.isDMBased()) return false;
+            if (!channel.lastMessageId) return false;
+
+            const botPerms = channel.permissionsFor(me);
+            const userPerms = channel.permissionsFor(user);
+            return Boolean(
+                botPerms?.has(neededBotPerms) &&
+                userPerms?.has(PermissionFlagsBits.ViewChannel),
+            );
+        },
+    );
+
     const messages: string[] = [];
+    let cursor = 0;
 
-    for (const channel of user.guild.channels.cache.values()) {
-        if (!channel.isTextBased()) continue;
-
-        const botPerms = me ? channel.permissionsFor(me) : null;
-        const userPerms = channel.permissionsFor(user);
-        const needed = [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory];
-
-        if (!botPerms?.has(needed) || !userPerms?.has(PermissionFlagsBits.ViewChannel)) continue;
-
-        try {
-            messages.push(...await fetchInChannel(channel, user.id, maxMessagesPerChannel));
-        } catch (err) {
-            console.error(`Failed to read #${channel.name}:`, err);
+    async function worker() {
+        while (
+            cursor < readableChannels.length &&
+            messages.length < maxTotalMessages
+            ) {
+            const channel = readableChannels[cursor++]!;
+            try {
+                await fetchInChannel(
+                    channel,
+                    user.id,
+                    maxMessagesPerChannel,
+                    messages,
+                    maxTotalMessages,
+                );
+            } catch (err) {
+                console.error(`Failed to read #${channel.name}:`, err);
+            }
         }
     }
 
+    const workers = Array.from(
+        { length: Math.min(concurrency, readableChannels.length) },
+        () => worker(),
+    );
+
+    await Promise.all(workers);
     return messages;
 }
 
@@ -86,8 +123,8 @@ export async function generateMarkovWeights(user: GuildMember) {
         }
     }
 
-    const guildWeights = globalWeights.ensure(user.id, () => new Collection());
-    guildWeights.set(user.guild.id, {
+    const guildWeights = globalWeights.ensure(user.guild.id, () => new Collection());
+    guildWeights.set(user.id, {
         dateTime: Math.floor(Date.now() / 1000),
         weights,
     });
