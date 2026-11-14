@@ -1,4 +1,4 @@
-import { markovWeights } from "./markov_index.js";
+import { globalWeights } from "./markov_index.js";
 
 function pickRandom<T>(items: T[]): T | undefined {
     if (items.length === 0) return undefined;
@@ -6,7 +6,7 @@ function pickRandom<T>(items: T[]): T | undefined {
 }
 
 export function generateMarkovstr(guildId: string, userId: string): string {
-    const weights = markovWeights.get(guildId)?.get(userId)?.weights;
+    const weights = globalWeights.get(guildId)?.get(userId)?.weights;
     if (!weights) return '';
 
     const words: string[] = [];

@@ -1,5 +1,5 @@
 import {ChatInputCommandInteraction, InteractionContextType, MessageFlags, SlashCommandBuilder, Collection} from "discord.js";
-import { generateMarkovWeights, markovWeights, type MarkovEntry } from "../../functions/markov_index.js";
+import { generateMarkovWeights, globalWeights, type MarkovEntry } from "../../functions/markov_index.js";
 import { generateMarkovstr } from "../../functions/markov_engine.js";
 
 export default {
@@ -38,14 +38,15 @@ export default {
                 allowedMentions: { parse: [] },
             });
 
-            if (!markovWeights.has(interaction.guildId)) {
-                markovWeights.set(interaction.guildId, new Collection<string, MarkovEntry>());
+            let guildEntry = globalWeights.get(interaction.guildId);
+            if (!guildEntry) {
+                globalWeights.set(interaction.guildId, new Collection<string, MarkovEntry>());
+                guildEntry = globalWeights.get(interaction.guildId);
             }
 
-            const guildEntry = markovWeights.get(interaction.guildId);
             const userEntry = guildEntry?.get(member.id);
             const now = Math.floor(Date.now() / 1000);
-            if (!guildEntry || !userEntry || now - userEntry.dateTime > 86400) {
+            if (!userEntry || now - userEntry.dateTime > 86400) {
                 await generateMarkovWeights(member);
             }
 

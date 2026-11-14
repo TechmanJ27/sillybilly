@@ -2,7 +2,7 @@ import { Collection, GuildMember, PermissionFlagsBits, type GuildTextBasedChanne
 
 export type MarkovEntry = {dateTime: number; weights: Map<string, string[]>; };
 
-export const markovWeights = new Collection<String, Collection<String, MarkovEntry>>();
+export const globalWeights = new Collection<String, Collection<String, MarkovEntry>>();
 
 async function fetchInChannel(
     channel: GuildTextBasedChannel,
@@ -86,7 +86,7 @@ export async function generateMarkovWeights(user: GuildMember) {
         }
     }
 
-    const guildWeights = markovWeights.ensure(user.id, () => new Collection());
+    const guildWeights = globalWeights.ensure(user.id, () => new Collection());
     guildWeights.set(user.guild.id, {
         dateTime: Math.floor(Date.now() / 1000),
         weights,
